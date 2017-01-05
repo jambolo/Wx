@@ -20,15 +20,15 @@ public:
 
     //! Constructor
     DeviceContext(HWND hWnd)
-        : m_hWnd(hWnd)
-        , m_hDC(::GetDC(hWnd))
+        : hWnd_(hWnd)
+        , hDC_(::GetDC(hWnd))
     {
     }
 
     //! Destructor
     ~DeviceContext()
     {
-        ReleaseDC(m_hWnd, m_hDC);
+        ReleaseDC(hWnd_, hDC_);
     }
 
     // non-copyable
@@ -36,16 +36,15 @@ public:
     DeviceContext & operator =(DeviceContext const &) = delete;
 
     //! Returns the device context handle
-    HDC GetDC() const { return m_hDC; }
+    HDC GetDC() const { return hDC_; }
 
 private:
 
-    HDC m_hDC;          //!< Device context handle
-    HWND m_hWnd;        //!< Window handle
+    HDC hDC_;          //!< Device context handle
+    HWND hWnd_;        //!< Window handle
 };
 
 //! A class that initializes COM while it is in scope
-
 class ComInitializer
 {
 public:
@@ -78,14 +77,12 @@ public:
 
     Win32ErrorException(HRESULT code = S_OK, char const * sMsg = "Win32 error reported") throw ()
         : std::exception(sMsg)
-        , m_Code(code)
+        , code_(code)
     {
     }
 
     // Destructor
-    virtual ~Win32ErrorException() throw ()
-    {
-    }
+    virtual ~Win32ErrorException() override throw ()= default;
 
     //! @name Overrides std::exception
     //@{
@@ -95,12 +92,12 @@ public:
     //! Returns the error code
     virtual HRESULT code() const
     {
-        return m_Code;
+        return code_;
     }
 
 private:
 
-    HRESULT m_Code;     //!< The error code.
+    HRESULT code_;
 };
 
 //! Registers a window class. Returns NULL if failed
@@ -123,10 +120,10 @@ ATOM RegisterWindowClass(UINT      style,
 //! @c false, it will not be called until a message has been processed and the queue is empty again.
 //!
 //! @param	hWnd	Window handle
-typedef bool (* MessageLoopIdleCallback)(HWND hWnd);
+using MessageLoopIdleCallback = bool (*)(HWND hWnd);
 
 //! Standard windows message loop. Returns the value in the WM_QUIT message.
-int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB = 0);
+int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB = nullptr);
 
 //! @name Debugging Functions
 //!

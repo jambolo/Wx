@@ -13,7 +13,7 @@ namespace Wx
 //! @param	hWnd	Window handle
 //! @param	pCB		The address of the idle function to be called when there are no messages to process, or 0.
 
-int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB /* = 0*/)
+int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB /* = nullptr*/)
 {
     bool skipIdle = false;
 
@@ -24,7 +24,7 @@ int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB /* = 0*/)
         // If there is no idle function, or the idle function no longer needs to be called, or there is a message
         // waiting, get (or wait for) the next message and process it. Otherwise, call the idle function.
 
-        if (pCB == 0 || skipIdle || PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
+        if (pCB || skipIdle || PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
         {
             int const rc = GetMessage(&msg, NULL, 0, 0);
             if (rc == -1)
