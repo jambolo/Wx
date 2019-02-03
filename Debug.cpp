@@ -1,5 +1,3 @@
-// #include "PrecompiledHeaders.h"
-
 #include "Wx.h"
 
 #include <sstream>

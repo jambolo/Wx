@@ -1,12 +1,9 @@
-// #include "PrecompiledHeaders.h"
-
 #include "Wx.h"
 
 namespace Wx
 {
 //!
-//! @param	all		See the documentation for @c WNDCLASSEX for the meaning of each parameter.
-
+//! @param	all		See the documentation for WNDCLASSEX for the meaning of each parameter.
 ATOM RegisterWindowClass(UINT      style,
                          WNDPROC   lpfnWndProc,
                          HINSTANCE hInstance,

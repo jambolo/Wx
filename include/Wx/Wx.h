@@ -8,24 +8,22 @@
 
 #include <Misc/exceptions.h>
 
-//! Miscellaneous Windows support functions
-
+//! Miscellaneous Windows support functions.
 namespace Wx
 {
-//! A windows device context (DC) wrapper
-
+//! A windows device context (DC) wrapper.
 class DeviceContext
 {
 public:
 
-    //! Constructor
+    //! Constructor.
     DeviceContext(HWND hWnd)
         : hWnd_(hWnd)
         , hDC_(::GetDC(hWnd))
     {
     }
 
-    //! Destructor
+    //! Destructor.
     ~DeviceContext()
     {
         ReleaseDC(hWnd_, hDC_);
@@ -35,7 +33,7 @@ public:
     DeviceContext(DeviceContext const &) = delete;
     DeviceContext & operator =(DeviceContext const &) = delete;
 
-    //! Returns the device context handle
+    //! Returns the device context handle.
     HDC GetDC() const { return hDC_; }
 
 private:
@@ -44,34 +42,33 @@ private:
     HWND hWnd_;        //!< Window handle
 };
 
-//! A class that initializes COM while it is in scope
+//! A class that initializes COM while it is in scope.
 class ComInitializer
 {
 public:
 
-    //! Constructor
-    //
+    //! Constructor.
+    //!
     //! @param	pvReserved	Use the default value
     ComInitializer(LPVOID pvReserved = NULL)  // , DWORD dwCoInit = COINIT_MULTITHREADED )
     {
         CoInitialize(pvReserved);  // , dwCoInit );
     }
 
-    // Destructor
+    // Destructor.
     ~ComInitializer()
     {
         CoUninitialize();
     }
 };
 
-//! An exception to throw when a Win32 function returns a failure
-
+//! An exception to throw when a Win32 function returns a failure.
 class Win32ErrorException : public std::exception
 {
 public:
 
-    //! Constructor
-    //
+    //! Constructor.
+    //!
     //! @param	code	The error code (default is S_OK)
     //! @param	sMsg	The error message (default is "Win32 error reported")
 
@@ -81,8 +78,8 @@ public:
     {
     }
 
-    // Destructor
-    virtual ~Win32ErrorException() override throw ()= default;
+    //! Destructor.
+    virtual ~Win32ErrorException() override = default;
 
     //! @name Overrides std::exception
     //@{
@@ -100,7 +97,7 @@ private:
     HRESULT code_;
 };
 
-//! Registers a window class. Returns NULL if failed
+//! Registers a window class.
 ATOM RegisterWindowClass(UINT      style,
                          WNDPROC   lpfnWndProc,
                          HINSTANCE hInstance,
@@ -113,13 +110,15 @@ ATOM RegisterWindowClass(UINT      style,
                          int       cbClsExtra    = 0,
                          int       cbWndExtra    = 0);
 
-//! Idle function for MessageLoop(). Returns @c true if it should be called again immediately if the queue is empty.
-//
+//! Idle function for MessageLoop().
+//!
 //! This function is is a parameter to MessageLoop() and is called whenever the message queue is empty. If it
-//! returns @c true, then it will be called again immediately if the message queue is empty. If it returns
-//! @c false, it will not be called until a message has been processed and the queue is empty again.
+//! returns true, then it will be called again immediately if the message queue is empty. If it returns
+//! false, it will not be called until a message has been processed and the queue is empty again.
 //!
 //! @param	hWnd	Window handle
+//!
+//! @return     Returns true if it should be called again immediately if the queue is empty.
 using MessageLoopIdleCallback = bool (*)(HWND hWnd);
 
 //! Standard windows message loop. Returns the value in the WM_QUIT message.
@@ -131,13 +130,13 @@ int MessageLoop(HWND hWnd, MessageLoopIdleCallback pCB = nullptr);
 
 #if defined(_DEBUG)
 
-//! Dumps the device's caps to the debugger output window
+//! Dumps the device's caps to the debugger output window.
 void DumpDeviceCaps(HDC hDC);
 
 #endif // defined( _DEBUG )
 
 //! Returns the COM object's current reference count.
-//
+//!
 //!
 //! @param	pObject	COM object pointer
 
@@ -153,8 +152,8 @@ inline ULONG GetReferenceCount(T * pObject)
 //!
 //@{
 
-//! Releases a COM object and resets the pointer to @c NULL.
-//
+//! Releases a COM object and resets the pointer to NULL.
+//!
 //!
 //! @param	pObject	COM object pointer
 
@@ -172,7 +171,7 @@ inline void SafeRelease(T * & pObject)
 }  // namespace Wx
 
 //! Asserts that the HRESULT value indicates success.
-//
+//!
 //!
 //! @param	hr	@c HRESULT value
 //!
@@ -180,7 +179,7 @@ inline void SafeRelease(T * & pObject)
 
 #if defined(_DEBUG)
 
-#include <Misc/Assert.h>
+#include <Misc/Assertx.h>
 
 #define assert_succeeded(hr) \
     (void)(SUCCEEDED(hr) ||  \
